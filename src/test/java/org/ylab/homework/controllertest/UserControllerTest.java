@@ -1,21 +1,22 @@
 package org.ylab.homework.controllertest;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.ylab.homework.homework_1.in.controller.UserController;
+import org.ylab.homework.homework_1.controller.UserController;
 import org.ylab.homework.homework_1.model.Role;
 import org.ylab.homework.homework_1.model.Training;
 import org.ylab.homework.homework_1.model.User;
 import org.ylab.homework.homework_1.service.UserService;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 
+@DisplayName("Testing UserController class")
 public class UserControllerTest {
 
     private UserService userService;
@@ -30,6 +31,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @DisplayName("Test registering a new user")
     public void testRegisterUser() {
         String username = "user";
         String password = "password";
@@ -43,6 +45,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @DisplayName("Test login with correct credentials")
     public void testLoginUser_Successful() {
         String username = "user";
         String password = "password";
@@ -55,6 +58,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @DisplayName("Test login with incorrect credentials")
     public void testLoginUser_IncorrectCredentials() {
         String username = "user";
         String password = "wrong_password";
@@ -66,6 +70,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @DisplayName("Test login with incorrect password")
     public void testLoginUser_WrongPassword() {
         String username = "user";
         String password = "wrong_password";
@@ -77,6 +82,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @DisplayName("Test updating user role when user exists")
     public void testUpdateUserRole_UserExists() {
         String username = "user";
         Role newRole = Role.ADMIN;
@@ -88,6 +94,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @DisplayName("Test updating user role when not user exists")
     public void testUpdateUserRole_UserDoesNotExist() {
         String username = "non_existing_user";
         Role newRole = Role.ADMIN;

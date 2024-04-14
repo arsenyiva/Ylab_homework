@@ -1,4 +1,4 @@
-package org.ylab.homework.homework_1.in.controller;
+package org.ylab.homework.homework_1.controller;
 
 import org.ylab.homework.homework_1.model.Role;
 import org.ylab.homework.homework_1.model.Training;

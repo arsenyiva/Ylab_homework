@@ -2,8 +2,10 @@ package org.ylab.homework.controllertest;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.ylab.homework.homework_1.in.controller.TrainingController;
+import org.mockito.Mockito;
+import org.ylab.homework.homework_1.controller.TrainingController;
 import org.ylab.homework.homework_1.model.Role;
 import org.ylab.homework.homework_1.model.Training;
 import org.ylab.homework.homework_1.model.TrainingType;
@@ -12,17 +14,14 @@ import org.ylab.homework.homework_1.service.TrainingService;
 import org.ylab.homework.homework_1.service.TrainingTypeService;
 
 import java.time.LocalDate;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
-
-import org.mockito.Mockito;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.*;
+@DisplayName("Testing TrainingController class")
 public class TrainingControllerTest {
 
     private static User user;
@@ -45,6 +44,7 @@ public class TrainingControllerTest {
     }
 
     @Test
+    @DisplayName("Test adding a new training")
     public void testAddTraining() {
         String typeName = "Run";
         LocalDate date = LocalDate.of(2024, 4, 11);
@@ -62,6 +62,7 @@ public class TrainingControllerTest {
     }
 
     @Test
+    @DisplayName("Test deleting a training")
     public void testDeleteTraining() {
         LocalDate date = LocalDate.of(2024, 4, 11);
         String type = "Run";
@@ -77,6 +78,7 @@ public class TrainingControllerTest {
     }
 
     @Test
+    @DisplayName("Test editing a training")
     public void testEditTraining() {
         LocalDate date = LocalDate.of(2024, 4, 11);
         LocalDate newDate = LocalDate.of(2024, 5, 11);
@@ -93,6 +95,7 @@ public class TrainingControllerTest {
 
 
     @Test
+    @DisplayName("Test calculating total calories burned")
     public void testGetTotalCaloriesBurned() {
         LocalDate startDate = LocalDate.of(2024, 4, 1);
         LocalDate endDate = LocalDate.of(2024, 4, 30);
@@ -107,6 +110,7 @@ public class TrainingControllerTest {
     }
 
     @Test
+    @DisplayName("Test getting all trainings")
     public void testGetAllTrainings() {
         List<Training> trainings = new ArrayList<>();
         trainings.add(new Training(1, LocalDate.of(2024, 4, 11), new TrainingType("Run"), 60, 300, "info", user));
@@ -117,6 +121,7 @@ public class TrainingControllerTest {
     }
 
     @Test
+    @DisplayName("Test getting trainings for a user")
     public void testGetTrainings() {
         List<Training> trainings = new ArrayList<>();
         trainings.add(new Training(1, LocalDate.of(2024, 4, 11), new TrainingType("Run"), 60, 300, "info", user));
@@ -127,6 +132,7 @@ public class TrainingControllerTest {
     }
 
     @Test
+    @DisplayName("Test adding a new training type")
     public void testAddTrainingType() {
         String typeName = "Running";
         trainingController.addTrainingType(typeName);

@@ -15,7 +15,7 @@ public class TrainingDB {
      * Добавляет тренировку для указанного пользователя в базу данных.
      * Если для пользователя еще нет записей о тренировках, создается новая запись.
      *
-     * @param user Пользователь, для которого добавляется тренировка
+     * @param user     Пользователь, для которого добавляется тренировка
      * @param training Добавляемая тренировка
      */
     public void addTraining(User user, Training training) {
@@ -29,6 +29,7 @@ public class TrainingDB {
 
     /**
      * Возвращает список тренировок для указанного пользователя.
+     *
      * @param user Пользователь, для которого запрашиваются тренировки
      * @return Список тренировок пользователя, или пустой список, если пользователь не имеет тренировок
      */
@@ -38,7 +39,8 @@ public class TrainingDB {
 
     /**
      * Удаляет указанную тренировку для указанного пользователя из базы данных.
-     * @param user Пользователь, чья тренировка должна быть удалена
+     *
+     * @param user     Пользователь, чья тренировка должна быть удалена
      * @param training Тренировка, которая должна быть удалена
      */
     public void deleteTraining(User user, Training training) {
@@ -50,22 +52,29 @@ public class TrainingDB {
 
     /**
      * Обновляет указанную тренировку для указанного пользователя в базе данных.
-     * @param user Пользователь, чья тренировка должна быть обновлена
+     *
+     * @param user        Пользователь, чья тренировка должна быть обновлена
      * @param oldTraining Старая версия тренировки
      * @param newTraining Новая версия тренировки
      */
     public void updateTraining(User user, Training oldTraining, Training newTraining) {
         List<Training> userTrainings = trainingData.get(user);
         if (userTrainings != null) {
-            int index = userTrainings.indexOf(oldTraining);
-            if (index != -1) {
-                userTrainings.set(index, newTraining);
+            Integer oldTrainingId = oldTraining.getId();
+            for (int i = 0; i < userTrainings.size(); i++) {
+                Training training = userTrainings.get(i);
+                Integer trainingId = training.getId();
+                if (oldTrainingId.equals(trainingId)) {
+                    userTrainings.set(i, newTraining);
+                    break;
+                }
             }
         }
     }
 
     /**
      * Возвращает список всех тренировок в базе данных.
+     *
      * @return Список всех тренировок
      */
     public List<Training> getAllTrainings() {

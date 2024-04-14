@@ -1,6 +1,7 @@
 package org.ylab.homework.servicetest;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.ylab.homework.homework_1.database.UserDB;
 import org.ylab.homework.homework_1.model.Role;
@@ -11,9 +12,9 @@ import org.ylab.homework.homework_1.service.UserService;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
-
+@DisplayName("Testing UserService class")
 public class UserServiceTest {
 
     private UserDB mockUserDB;
@@ -26,6 +27,7 @@ public class UserServiceTest {
     }
 
     @Test
+    @DisplayName("Test registering a new user")
     public void testRegister() {
         List<Training> trainings = new ArrayList<>();
         User user = new User(1, "testUser", "password", Role.USER, trainings);
@@ -34,6 +36,7 @@ public class UserServiceTest {
     }
 
     @Test
+    @DisplayName("Test logging in")
     public void testLogin() {
         String username = "testUser";
         List<Training> trainings = new ArrayList<>();
@@ -46,6 +49,7 @@ public class UserServiceTest {
     }
 
     @Test
+    @DisplayName("Test updating user role")
     public void testUpdateUserRole() {
         String username = "testUser";
         Role newRole = Role.ADMIN;
@@ -54,6 +58,7 @@ public class UserServiceTest {
     }
 
     @Test
+    @DisplayName("Test getting all users")
     public void testGetAllUsers() {
         List<User> expectedUsers = new ArrayList<>();
         List<Training> trainings1 = new ArrayList<>();
@@ -68,6 +73,7 @@ public class UserServiceTest {
     }
 
     @Test
+    @DisplayName("Test getting a user by username")
     public void testGetUser() {
         String username = "testUser";
         List<Training> trainings = new ArrayList<>();

@@ -1,14 +1,15 @@
 package org.ylab.homework.homework_1.main;
 
-import org.ylab.homework.homework_1.in.controller.TrainingController;
-import org.ylab.homework.homework_1.in.controller.UserController;
+import org.ylab.homework.homework_1.controller.TrainingController;
+import org.ylab.homework.homework_1.controller.UserController;
 import org.ylab.homework.homework_1.database.TrainingDB;
 import org.ylab.homework.homework_1.database.UserDB;
+import org.ylab.homework.homework_1.in.InputHandler;
 import org.ylab.homework.homework_1.model.Role;
+import org.ylab.homework.homework_1.out.OutputHandler;
 import org.ylab.homework.homework_1.service.TrainingService;
 import org.ylab.homework.homework_1.service.TrainingTypeService;
 import org.ylab.homework.homework_1.service.UserService;
-import org.ylab.homework.homework_1.out.ConsoleUI;
 
 import java.util.ArrayList;
 
@@ -34,9 +35,9 @@ public class TrainingDiaryApp {
         trainingController.addTrainingType("КРОССФИТ");
         userController.registerUser("admin", "admin", Role.ADMIN, new ArrayList<>());
         userController.registerUser("user", "user", Role.USER, new ArrayList<>());
-
-        ConsoleUI consoleUI = new ConsoleUI(userController, trainingController);
-        consoleUI.start();
+        OutputHandler outputHandler = new OutputHandler();
+        InputHandler inputHandler = new InputHandler(userController, trainingController,outputHandler);
+        inputHandler.handleInput();
     }
 }
 

@@ -1,6 +1,7 @@
 package org.ylab.homework.servicetest;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.ylab.homework.homework_1.database.TrainingDB;
 import org.ylab.homework.homework_1.model.Role;
@@ -9,12 +10,13 @@ import org.ylab.homework.homework_1.model.TrainingType;
 import org.ylab.homework.homework_1.model.User;
 import org.ylab.homework.homework_1.service.TrainingService;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-import java.time.LocalDate;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
+@DisplayName("Testing TrainingService class")
 public class TrainingServiceTest {
 
     private TrainingDB mockTrainingDB;
@@ -34,12 +36,14 @@ public class TrainingServiceTest {
     }
 
     @Test
+    @DisplayName("Test adding a training")
     public void testAddTraining() {
         trainingService.addTraining(user, training);
         verify(mockTrainingDB).addTraining(user, training);
     }
 
     @Test
+    @DisplayName("Test getting trainings")
     public void testGetTrainings() {
         List<Training> expectedTrainings = new ArrayList<>();
         expectedTrainings.add(training);
@@ -51,12 +55,14 @@ public class TrainingServiceTest {
     }
 
     @Test
+    @DisplayName("Test deleting a training")
     public void testDeleteTraining() {
         trainingService.deleteTraining(user, training);
         verify(mockTrainingDB).deleteTraining(user, training);
     }
 
     @Test
+    @DisplayName("Test editing a training")
     public void testEditTraining() {
         TrainingType newTrainingType = new TrainingType("Swimming");
         Training newTraining = new Training(1, LocalDate.now(), newTrainingType, 45, 150, "Great swim", user);
@@ -66,6 +72,7 @@ public class TrainingServiceTest {
     }
 
     @Test
+    @DisplayName("Test getting all trainings")
     public void testGetAllTrainings() {
         List<Training> expectedTrainings = new ArrayList<>();
         User user1 = new User(1, "user1", "password1", Role.USER, new ArrayList<>());
