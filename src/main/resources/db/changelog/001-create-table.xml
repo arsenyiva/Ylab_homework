@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <changeSet id="create-training-app-schema" author="Arsenii_Ivashchenko">
+        <sql>
+            CREATE SCHEMA IF NOT EXISTS training_app;
+
+        </sql>
+    </changeSet>
+
+
+    <changeSet id="create-audit-log-table" author="Arsenii_Ivashchenko">
+        <createTable tableName="audit_log" schemaName="training_app">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="message" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-user-table" author="Arsenii_Ivashchenko">
+        <createTable tableName="users" schemaName="training_app">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="username" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-training-table" author="Arsenii_Ivashchenko">
+        <createTable tableName="trainings" schemaName="training_app">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="duration_minutes" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="calories_burned" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="additional_info" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-training-type-table" author="Arsenii_Ivashchenko">
+        <createTable tableName="training_types" schemaName="training_app">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="add-foreign-keys" author="Arsenii_Ivashchenko">
+        <addForeignKeyConstraint baseTableName="trainings" baseColumnNames="user_id"
+                                 constraintName="fk_user_id" referencedTableName="users"
+                                 referencedColumnNames="id" onDelete="CASCADE"
+                                 baseTableSchemaName="training_app" referencedTableSchemaName="training_app"/>
+        <addForeignKeyConstraint baseTableName="trainings" baseColumnNames="type_id"
+                                 constraintName="fk_type_id" referencedTableName="training_types"
+                                 referencedColumnNames="id" onDelete="CASCADE"
+                                 baseTableSchemaName="training_app" referencedTableSchemaName="training_app"/>
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,10 +1,11 @@
-package org.ylab.homework.homework_1.controller;
+package org.ylab.homework.homework_2.controller;
 
-import org.ylab.homework.homework_1.model.Role;
-import org.ylab.homework.homework_1.model.Training;
-import org.ylab.homework.homework_1.model.User;
-import org.ylab.homework.homework_1.service.UserService;
+import org.ylab.homework.homework_2.model.Role;
+import org.ylab.homework.homework_2.model.Training;
+import org.ylab.homework.homework_2.model.User;
+import org.ylab.homework.homework_2.service.UserService;
 
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -30,12 +31,12 @@ public class UserController {
      * @param role Роль пользователя
      * @param trainings Список тренировок пользователя
      */
-    public void registerUser(String username, String password, Role role, List<Training> trainings) {
-        int id = userService.generateId();
-        User user = new User(id, username, password, role, trainings);
-        userService.register(user);
+    public void registerUser(String username, String password, Role role, List<Training> trainings) throws SQLException {
+        User user = new User(username, password, role, trainings);
+        userService.register(user); // Регистрируем пользователя с базой данных
         System.out.println("Регистрация прошла успешно!");
     }
+
 
     /**
      * Позволяет пользователю войти в систему с указанным именем пользователя и паролем.
@@ -44,7 +45,7 @@ public class UserController {
      * @param password Пароль пользователя
      * @return Возвращает объект пользователя, если вход прошел успешно, иначе возвращает null
      */
-    public User loginUser(String username, String password) {
+    public User loginUser(String username, String password) throws SQLException {
         User user = userService.login(username);
         if (user != null && user.getPassword().equals(password)) {
             System.out.println("Вход прошел успешно");
@@ -61,7 +62,7 @@ public class UserController {
      * @param username Имя пользователя, роль которого нужно обновить
      * @param newRole Новая роль пользователя
      */
-    public void updateUserRole(String username, Role newRole) {
+    public void updateUserRole(String username, Role newRole) throws SQLException {
         User user = userService.getUser(username);
         if (user != null) {
             userService.updateUserRole(username, newRole);

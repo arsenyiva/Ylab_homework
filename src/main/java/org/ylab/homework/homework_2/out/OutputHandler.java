@@ -1,6 +1,6 @@
-package org.ylab.homework.homework_1.out;
+package org.ylab.homework.homework_2.out;
 
-import org.ylab.homework.homework_1.model.Training;
+import org.ylab.homework.homework_2.model.Training;
 
 import java.util.Comparator;
 import java.util.List;
@@ -31,7 +31,7 @@ public class OutputHandler {
      * @param trainings Список тренировок для отображения.
      */
     public void displayTrainings(List<Training> trainings) {
-        if (trainings.isEmpty()) {
+        if (trainings == null || trainings.isEmpty()) {
             System.out.println("Тренировок не найдено...");
         } else {
             trainings.sort(Comparator.comparing(Training::getDate));

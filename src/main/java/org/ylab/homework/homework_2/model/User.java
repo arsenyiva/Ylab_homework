@@ -1,4 +1,4 @@
-package org.ylab.homework.homework_1.model;
+package org.ylab.homework.homework_2.model;
 
 import java.util.List;
 
@@ -15,6 +15,20 @@ public class User {
         this.password = password;
         this.role = role;
         this.trainings = trainings;
+    }
+
+    public User(String username, String password, Role role, List<Training> trainings) {
+        this.username = username;
+        this.password = password;
+        this.role = role;
+        this.trainings = trainings;
+    }
+
+    public User() {
+    }
+
+    public User(int id) {
+        this.id = id;
     }
 
     public String getUsername() {

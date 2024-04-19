@@ -3,12 +3,13 @@ package org.ylab.homework.controllertest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.ylab.homework.homework_1.controller.UserController;
-import org.ylab.homework.homework_1.model.Role;
-import org.ylab.homework.homework_1.model.Training;
-import org.ylab.homework.homework_1.model.User;
-import org.ylab.homework.homework_1.service.UserService;
+import org.ylab.homework.homework_2.controller.UserController;
+import org.ylab.homework.homework_2.model.Role;
+import org.ylab.homework.homework_2.model.Training;
+import org.ylab.homework.homework_2.model.User;
+import org.ylab.homework.homework_2.service.UserService;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,13 +33,12 @@ public class UserControllerTest {
 
     @Test
     @DisplayName("Test registering a new user")
-    public void testRegisterUser() {
+    public void testRegisterUser() throws SQLException {
         String username = "user";
         String password = "password";
         Role role = Role.USER;
         List<Training> trainings = new ArrayList<>();
 
-        when(userService.generateId()).thenReturn(1);
         userController.registerUser(username, password, role, trainings);
 
         verify(userService, times(1)).register(any(User.class));
@@ -46,7 +46,7 @@ public class UserControllerTest {
 
     @Test
     @DisplayName("Test login with correct credentials")
-    public void testLoginUser_Successful() {
+    public void testLoginUser_Successful() throws SQLException {
         String username = "user";
         String password = "password";
 
@@ -59,7 +59,7 @@ public class UserControllerTest {
 
     @Test
     @DisplayName("Test login with incorrect credentials")
-    public void testLoginUser_IncorrectCredentials() {
+    public void testLoginUser_IncorrectCredentials() throws SQLException {
         String username = "user";
         String password = "wrong_password";
 
@@ -71,7 +71,7 @@ public class UserControllerTest {
 
     @Test
     @DisplayName("Test login with incorrect password")
-    public void testLoginUser_WrongPassword() {
+    public void testLoginUser_WrongPassword() throws SQLException {
         String username = "user";
         String password = "wrong_password";
 
@@ -83,7 +83,7 @@ public class UserControllerTest {
 
     @Test
     @DisplayName("Test updating user role when user exists")
-    public void testUpdateUserRole_UserExists() {
+    public void testUpdateUserRole_UserExists() throws SQLException {
         String username = "user";
         Role newRole = Role.ADMIN;
 
@@ -95,7 +95,7 @@ public class UserControllerTest {
 
     @Test
     @DisplayName("Test updating user role when not user exists")
-    public void testUpdateUserRole_UserDoesNotExist() {
+    public void testUpdateUserRole_UserDoesNotExist() throws SQLException {
         String username = "non_existing_user";
         Role newRole = Role.ADMIN;
 

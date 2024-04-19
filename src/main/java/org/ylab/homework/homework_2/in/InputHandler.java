@@ -1,13 +1,14 @@
-package org.ylab.homework.homework_1.in;
+package org.ylab.homework.homework_2.in;
 
-import org.ylab.homework.homework_1.controller.TrainingController;
-import org.ylab.homework.homework_1.controller.UserController;
-import org.ylab.homework.homework_1.model.Role;
-import org.ylab.homework.homework_1.model.Training;
-import org.ylab.homework.homework_1.model.User;
-import org.ylab.homework.homework_1.out.OutputHandler;
-import org.ylab.homework.homework_1.util.UserAuditLogger;
+import org.ylab.homework.homework_2.controller.TrainingController;
+import org.ylab.homework.homework_2.controller.UserController;
+import org.ylab.homework.homework_2.model.Role;
+import org.ylab.homework.homework_2.model.Training;
+import org.ylab.homework.homework_2.model.User;
+import org.ylab.homework.homework_2.out.OutputHandler;
+import org.ylab.homework.homework_2.util.UserAuditLogger;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,35 +34,39 @@ public class InputHandler {
     /**
      * Обрабатывает ввод пользователя и управляет основным потоком выполнения приложения.
      */
-    public void handleInput() {
+    public void handleInput() throws SQLException {
         outputHandler.displayMessage("Добро пожаловать в приложение!");
         boolean running = true;
-        while (running) {
-            outputHandler.displayMainMenu();
-            int choice = scanner.nextInt();
-            scanner.nextLine();
+        try {
+            while (running) {
+                outputHandler.displayMainMenu();
+                int choice = scanner.nextInt();
+                scanner.nextLine();
 
-            switch (choice) {
-                case 1:
-                    registerUser();
-                    break;
-                case 2:
-                    loginUser();
-                    break;
-                case 3:
-                    outputHandler.displayMessage("\nДо свидания!");
-                    running = false;
-                    break;
-                default:
-                    outputHandler.displayMessage("Неизвестные данные, попробуйте снова");
+                switch (choice) {
+                    case 1:
+                        registerUser();
+                        break;
+                    case 2:
+                        loginUser();
+                        break;
+                    case 3:
+                        outputHandler.displayMessage("\nДо свидания!");
+                        running = false;
+                        break;
+                    default:
+                        outputHandler.displayMessage("Неизвестные данные, попробуйте снова");
+                }
             }
+        } finally {
         }
     }
+
 
     /**
      * Регистрирует нового пользователя в системе.
      */
-    private void registerUser() {
+    private void registerUser() throws SQLException {
         outputHandler.displayMessage("Введите имя: ");
         String username = scanner.nextLine();
         outputHandler.displayMessage("Введите пароль: ");
@@ -76,7 +81,7 @@ public class InputHandler {
      * Выполняет процесс входа зарегистрированного пользователя в систему.
      */
 
-    private void loginUser() {
+    private void loginUser() throws SQLException {
         outputHandler.displayMessage("Введите имя: ");
         String username = scanner.nextLine();
         outputHandler.displayMessage("Введите пароль: ");
@@ -102,7 +107,7 @@ public class InputHandler {
      *
      * @param user Пользователь, совершающий действия.
      */
-    private void interactWithTraining(User user) {
+    private void interactWithTraining(User user) throws SQLException {
         boolean loggedIn = true;
         while (loggedIn) {
             outputHandler.displayUserMenu();
@@ -114,7 +119,7 @@ public class InputHandler {
                     addTraining(user);
                     break;
                 case 2:
-                    outputHandler.displayTrainings(user.getTrainings());
+                    viewTrainings(trainingController.getTrainings(user));
                     break;
                 case 3:
                     deleteTraining(user);
@@ -140,7 +145,7 @@ public class InputHandler {
      *
      * @param user Админ, совершающий действия.
      */
-    private void adminPanel(User user) {
+    private void adminPanel(User user) throws SQLException {
         boolean loggedIn = true;
         while (loggedIn) {
             outputHandler.displayAdminMenu();
@@ -172,7 +177,7 @@ public class InputHandler {
      *
      * @param user Пользователь, совершающий действия.
      */
-    private void viewStatistic(User user) {
+    private void viewStatistic(User user) throws SQLException {
         List<Training> trainings = trainingController.getTrainings(user);
         if (trainings.isEmpty()) {
             outputHandler.displayMessage("Тренировок не найдено...");
@@ -193,14 +198,17 @@ public class InputHandler {
      *
      * @param user Пользователь, совершающий действия.
      */
-    private void editTraining(User user) {
+    private void editTraining(User user) throws SQLException {
         outputHandler.displayMessage("Введите дату тренировки (гггг-мм-дд): ");
         String dateString = scanner.nextLine();
         LocalDate date = LocalDate.parse(dateString);
 
         outputHandler.displayMessage("Введите тип тренировки: ");
         String type = scanner.nextLine();
-
+        if (!trainingController.trainingExists(user, date, type)) {
+            System.out.println("Тренировка не найдена...");
+            return;
+        }
         Set<String> trainingTypes = trainingController.getTrainingTypes();
         outputHandler.viewTrainingTypes(trainingTypes);
 
@@ -226,7 +234,7 @@ public class InputHandler {
      *
      * @param user Пользователь, совершающий действия.
      */
-    private void addTraining(User user) {
+    private void addTraining(User user) throws SQLException {
         Set<String> trainingTypes = trainingController.getTrainingTypes();
         outputHandler.viewTrainingTypes(trainingTypes);
 
@@ -263,7 +271,7 @@ public class InputHandler {
      *
      * @param user Пользователь, совершающий действия.
      */
-    private void deleteTraining(User user) {
+    private void deleteTraining(User user) throws SQLException {
         outputHandler.displayMessage("Введите дату тренировки в формате (yyyy-MM-dd): ");
         String dateString = scanner.nextLine();
         LocalDate date = LocalDate.parse(dateString);
@@ -274,16 +282,21 @@ public class InputHandler {
         trainingController.deleteTraining(user, date, type);
         UserAuditLogger.logTrainingDeleted(user.getUsername(), date, type);
     }
+
     /**
      * Позволяет админу изменить роль пользователя.
      */
-    private void changeUserRole() {
+    private void changeUserRole() throws SQLException {
         outputHandler.displayMessage("Введите имя пользователя: ");
         String username = scanner.nextLine();
         outputHandler.displayMessage("Введите роль пользователя (USER, ADMIN): ");
         String roleInput = scanner.nextLine();
         Role newRole = Role.valueOf(roleInput.toUpperCase());
         userController.updateUserRole(username, newRole);
+    }
+
+    public void viewTrainings(List<Training> trainings) {
+        outputHandler.displayTrainings(trainings);
     }
 }
 

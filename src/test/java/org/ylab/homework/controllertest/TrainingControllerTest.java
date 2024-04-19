@@ -5,14 +5,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.ylab.homework.homework_1.controller.TrainingController;
-import org.ylab.homework.homework_1.model.Role;
-import org.ylab.homework.homework_1.model.Training;
-import org.ylab.homework.homework_1.model.TrainingType;
-import org.ylab.homework.homework_1.model.User;
-import org.ylab.homework.homework_1.service.TrainingService;
-import org.ylab.homework.homework_1.service.TrainingTypeService;
+import org.ylab.homework.homework_2.controller.TrainingController;
+import org.ylab.homework.homework_2.model.Role;
+import org.ylab.homework.homework_2.model.Training;
+import org.ylab.homework.homework_2.model.TrainingType;
+import org.ylab.homework.homework_2.model.User;
+import org.ylab.homework.homework_2.service.TrainingService;
+import org.ylab.homework.homework_2.service.TrainingTypeService;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,7 +46,7 @@ public class TrainingControllerTest {
 
     @Test
     @DisplayName("Test adding a new training")
-    public void testAddTraining() {
+    public void testAddTraining() throws SQLException {
         String typeName = "Run";
         LocalDate date = LocalDate.of(2024, 4, 11);
         int duration = 60;
@@ -53,7 +54,7 @@ public class TrainingControllerTest {
         String info = "info";
 
         when(trainingTypeService.containsTrainingType(typeName)).thenReturn(false);
-        when(trainingService.generateId()).thenReturn(1);
+
 
         trainingController.addTraining(user, typeName, date, duration, calories, info);
 
@@ -63,7 +64,7 @@ public class TrainingControllerTest {
 
     @Test
     @DisplayName("Test deleting a training")
-    public void testDeleteTraining() {
+    public void testDeleteTraining() throws SQLException {
         LocalDate date = LocalDate.of(2024, 4, 11);
         String type = "Run";
 
@@ -79,7 +80,7 @@ public class TrainingControllerTest {
 
     @Test
     @DisplayName("Test editing a training")
-    public void testEditTraining() {
+    public void testEditTraining() throws SQLException {
         LocalDate date = LocalDate.of(2024, 4, 11);
         LocalDate newDate = LocalDate.of(2024, 5, 11);
         String type = "Run";
@@ -96,7 +97,7 @@ public class TrainingControllerTest {
 
     @Test
     @DisplayName("Test calculating total calories burned")
-    public void testGetTotalCaloriesBurned() {
+    public void testGetTotalCaloriesBurned() throws SQLException {
         LocalDate startDate = LocalDate.of(2024, 4, 1);
         LocalDate endDate = LocalDate.of(2024, 4, 30);
 
@@ -111,7 +112,7 @@ public class TrainingControllerTest {
 
     @Test
     @DisplayName("Test getting all trainings")
-    public void testGetAllTrainings() {
+    public void testGetAllTrainings() throws SQLException {
         List<Training> trainings = new ArrayList<>();
         trainings.add(new Training(1, LocalDate.of(2024, 4, 11), new TrainingType("Run"), 60, 300, "info", user));
         when(trainingService.getAllTrainings()).thenReturn(trainings);
@@ -122,20 +123,12 @@ public class TrainingControllerTest {
 
     @Test
     @DisplayName("Test getting trainings for a user")
-    public void testGetTrainings() {
+    public void testGetTrainings() throws SQLException {
         List<Training> trainings = new ArrayList<>();
         trainings.add(new Training(1, LocalDate.of(2024, 4, 11), new TrainingType("Run"), 60, 300, "info", user));
         when(trainingService.getTrainings(user)).thenReturn(trainings);
         List<Training> result = trainingController.getTrainings(user);
 
         assertEquals(trainings, result);
-    }
-
-    @Test
-    @DisplayName("Test adding a new training type")
-    public void testAddTrainingType() {
-        String typeName = "Running";
-        trainingController.addTrainingType(typeName);
-        verify(trainingTypeService).addTrainingType(typeName.toUpperCase());
     }
 }

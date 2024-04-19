@@ -1,97 +1,120 @@
 package org.ylab.homework.utiltest;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.ylab.homework.homework_1.util.UserAuditLogger;
+import org.junit.jupiter.api.*;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.ylab.homework.homework_2.util.UserAuditLogger;
 
+import java.sql.*;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.List;
 
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-
-@DisplayName("Testing UserAuditLogger class")
+@Testcontainers
 public class UserAuditLoggerTest {
+    @Container
+    private static final PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:latest")
+            .withDatabaseName("test_database")
+            .withUsername("test_user")
+            .withPassword("test_password");
+    private UserAuditLogger userAuditLogger;
 
-    private List<String> mockAuditLog;
+    private static Connection connection;
+
+    @BeforeAll
+    public static void setUpDatabase() throws SQLException {
+
+        connection = DriverManager.getConnection(postgreSQLContainer.getJdbcUrl(),
+                postgreSQLContainer.getUsername(),
+                postgreSQLContainer.getPassword());
+        createSchema();
+        createTables();
+    }
 
     @BeforeEach
-    public void setUp() {
-        mockAuditLog = mock(List.class);
-        UserAuditLogger.auditLog = mockAuditLog;
+    public void setUp() throws SQLException {
+        userAuditLogger = new UserAuditLogger(connection);
+        clearTestData();
+    }
+
+    @AfterAll
+    public static void tearDownDatabase() throws SQLException {
+        if (connection != null && !connection.isClosed()) {
+            connection.close();
+        }
+    }
+
+    private static void createSchema() throws SQLException {
+        try (Statement statement = connection.createStatement()) {
+            statement.executeUpdate("CREATE SCHEMA IF NOT EXISTS training_app");
+        }
+    }
+
+    private static void createTables() throws SQLException {
+        try (Statement statement = connection.createStatement()) {
+            statement.executeUpdate("CREATE TABLE training_app.audit_log (id SERIAL PRIMARY KEY, message VARCHAR(255) NOT NULL, created_at TIMESTAMP NOT NULL)");
+        }
+    }
+
+    private void clearTestData() throws SQLException {
+        try (Statement statement = connection.createStatement()) {
+            String sql = "DELETE FROM training_app.audit_log";
+            statement.executeUpdate(sql);
+        }
+    }
+    @Test
+    void logUserRegistration() throws SQLException {
+        userAuditLogger.logUserRegistration("test_user");
+        assertTrue(isMessageLogged("Пользователь test_user зарегистрировался "));
     }
 
     @Test
-    @DisplayName("Test logging user registration")
-    public void testLogUserRegistration() {
-        String username = "testUser";
-        UserAuditLogger.logUserRegistration(username);
-        verify(mockAuditLog).add(anyString());
+    void logUserLoggedIn() throws SQLException {
+        UserAuditLogger.logUserLoggedIn("test_user");
+        assertTrue(isMessageLogged("Пользователь test_user произвел вход в приложение в "));
     }
 
     @Test
-    @DisplayName("Test logging user login")
-    public void testLogUserLoggedIn() {
-        String username = "testUser";
-        UserAuditLogger.logUserLoggedIn(username);
-        verify(mockAuditLog).add(anyString());
+    void logTrainingAdded() throws SQLException {
+        UserAuditLogger.logTrainingAdded("test_user", LocalDate.now(), "Running");
+        assertTrue(isMessageLogged("Пользователь test_user добавил тренировку типа - Running "));
     }
 
     @Test
-    @DisplayName("Test logging training addition")
-    public void testLogTrainingAdded() {
-        String username = "testUser";
-        LocalDate date = LocalDate.now();
-        String type = "Running";
-        UserAuditLogger.logTrainingAdded(username, date, type);
-        verify(mockAuditLog).add(anyString());
+    void logTrainingDeleted() throws SQLException {
+        UserAuditLogger.logTrainingDeleted("test_user", LocalDate.now(), "Running");
+        assertTrue(isMessageLogged("Пользователь test_user удалил тренировку Running "));
     }
 
     @Test
-    @DisplayName("Test logging training deletion")
-    public void testLogTrainingDeleted() {
-        String username = "testUser";
-        LocalDate date = LocalDate.now();
-        String type = "Running";
-        UserAuditLogger.logTrainingDeleted(username, date, type);
-        verify(mockAuditLog).add(anyString());
+    void logTrainingEdited() throws SQLException {
+        UserAuditLogger.logTrainingEdited("test_user", LocalDate.now(), "Running");
+        assertTrue(isMessageLogged("Пользователь test_user отредактировал тренировку Running "));
     }
 
     @Test
-    @DisplayName("Test logging training edition")
-    public void testLogTrainingEdited() {
-        String username = "testUser";
-        LocalDate date = LocalDate.now();
-        String type = "Running";
-        UserAuditLogger.logTrainingEdited(username, date, type);
-        verify(mockAuditLog).add(anyString());
+    void logFailedLoginAttempt() throws SQLException {
+        UserAuditLogger.logFailedLoginAttempt("test_user");
+        assertTrue(isMessageLogged("Пользователь test_user пытался произвести вход в приложение в "));
     }
 
     @Test
-    @DisplayName("Test logging failed login attempt")
-    public void testLogFailedLoginAttempt() {
-        String username = "testUser";
-        UserAuditLogger.logFailedLoginAttempt(username);
-        verify(mockAuditLog).add(anyString());
+    void logLogout() throws SQLException {
+        UserAuditLogger.logLogout("test_user");
+        assertTrue(isMessageLogged("Пользователь test_user вышел из приложения в "));
     }
 
-    @Test
-    @DisplayName("Test logging user logout")
-    public void testLogLogout() {
-        String username = "testUser";
-        UserAuditLogger.logLogout(username);
-        verify(mockAuditLog).add(anyString());
-    }
-
-    @Test
-    @DisplayName("Test printing audit log")
-    public void testPrintAuditLog() {
-        List<String> auditLog = List.of(
-                "Пользователь testUser зарегистрировался 2024-04-11T12:00:00",
-                "Пользователь testUser произвел вход в приложение в 2024-04-11T12:00:00"
-        );
-        UserAuditLogger.auditLog = auditLog;
-        UserAuditLogger.printAuditLog();
+    private boolean isMessageLogged(String messagePrefix) throws SQLException {
+        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM training_app.audit_log WHERE message LIKE ?")) {
+            preparedStatement.setString(1, messagePrefix + "%");
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                return resultSet.next();
+            }
+        }
     }
 }

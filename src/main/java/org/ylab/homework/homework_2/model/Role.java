@@ -1,4 +1,4 @@
-package org.ylab.homework.homework_1.model;
+package org.ylab.homework.homework_2.model;
 
 /**
  * Перечисление ролей пользователей в приложении.

@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  mypostgres:
+    image: postgres:latest
+    container_name: mypostgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: mydatabase  # Имя базы данных
+      POSTGRES_USER: myuser    # Имя пользователя
+      POSTGRES_PASSWORD: mypassword  # Пароль пользователя
+    volumes:
+      - ./liquibase_schema.sql:/docker-entrypoint-initdb.d/liquibase_schema.sql

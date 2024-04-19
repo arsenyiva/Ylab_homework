@@ -1,4 +1,4 @@
-package org.ylab.homework.homework_1.model;
+package org.ylab.homework.homework_2.model;
 
 import java.time.LocalDate;
 
@@ -19,6 +19,9 @@ public class Training {
         this.caloriesBurned = caloriesBurned;
         this.additionalInfo = additionalInfo;
         this.user = user;
+    }
+
+    public Training() {
     }
 
     public LocalDate getDate() {
