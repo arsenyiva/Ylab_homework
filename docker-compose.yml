@@ -7,8 +7,8 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_DB: mydatabase  # Имя базы данных
-      POSTGRES_USER: myuser    # Имя пользователя
-      POSTGRES_PASSWORD: mypassword  # Пароль пользователя
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
     volumes:
       - ./liquibase_schema.sql:/docker-entrypoint-initdb.d/liquibase_schema.sql
