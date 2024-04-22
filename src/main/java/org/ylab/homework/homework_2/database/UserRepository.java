@@ -7,11 +7,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * Репозиторий для работы с данными пользователей в базе данных.
  */
-
 public class UserRepository {
     private Connection connection;
 

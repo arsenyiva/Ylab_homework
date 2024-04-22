@@ -1,5 +1,6 @@
 package org.ylab.homework.homework_2.main;
 
+import liquibase.exception.DatabaseException;
 import org.ylab.homework.homework_2.controller.TrainingController;
 import org.ylab.homework.homework_2.controller.UserController;
 import org.ylab.homework.homework_2.database.TrainingRepository;
@@ -11,8 +12,10 @@ import org.ylab.homework.homework_2.service.UserService;
 import org.ylab.homework.homework_2.out.OutputHandler;
 import org.ylab.homework.homework_2.in.InputHandler;
 import org.ylab.homework.homework_2.util.ConnectionManager;
+import org.ylab.homework.homework_2.util.LiquibaseUtil;
 import org.ylab.homework.homework_2.util.UserAuditLogger;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -21,9 +24,10 @@ import java.sql.SQLException;
  * Содержит метод main для запуска приложения.
  */
 public class TrainingDiaryApp {
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws SQLException, IOException, DatabaseException {
         Connection connection = ConnectionManager.getConnection();
-
+        LiquibaseUtil liquibaseUtil = new LiquibaseUtil();
+        liquibaseUtil.executeMigration();
         UserAuditLogger userAuditLogger = new UserAuditLogger(connection);
         UserRepository userRepository = new UserRepository(connection);
         TrainingRepository trainingRepository = new TrainingRepository(connection);
@@ -41,4 +45,3 @@ public class TrainingDiaryApp {
         inputHandler.handleInput();
     }
 }
-

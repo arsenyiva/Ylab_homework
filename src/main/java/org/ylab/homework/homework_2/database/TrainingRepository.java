@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Репозиторий для работы с тренировками пользователей в базе данных.
@@ -70,8 +71,9 @@ public class TrainingRepository {
                     int durationMinutes = resultSet.getInt("duration_minutes");
                     int caloriesBurned = resultSet.getInt("calories_burned");
                     String additionalInfo = resultSet.getString("additional_info");
-                    TrainingType type = getTrainingTypeById(typeId);
-                    Training training = new Training(id, date, type, durationMinutes, caloriesBurned, additionalInfo, user);
+                    Optional<TrainingType> type = getTrainingTypeByIdOptional(typeId);
+                    TrainingType typeValue = type.orElse(null);
+                    Training training = new Training(id, date, typeValue, durationMinutes, caloriesBurned, additionalInfo, user);
                     trainings.add(training);
                 }
             }
@@ -139,13 +141,25 @@ public class TrainingRepository {
                 String additionalInfo = resultSet.getString("additional_info");
 
                 User user = getUserById(userId);
-                TrainingType type = getTrainingTypeById(typeId);
-
-                Training training = new Training(id, date, type, durationMinutes, caloriesBurned, additionalInfo, user);
+                Optional<TrainingType> type = getTrainingTypeByIdOptional(typeId);
+                TrainingType typeValue = type.orElse(null);
+                Training training = new Training(id, date, typeValue, durationMinutes, caloriesBurned, additionalInfo, user);
                 allTrainings.add(training);
             }
         }
         return allTrainings;
+    }
+
+    /**
+     * Класс обертка. Получает тип тренировки по его идентификатору в виде Optional.
+     *
+     * @param typeId Идентификатор типа тренировки
+     * @return Optional с типом тренировки, если найден, иначе пустой Optional
+     * @throws SQLException если возникает ошибка при выполнении запроса к базе данных
+     */
+    public Optional<TrainingType> getTrainingTypeByIdOptional(int typeId) throws SQLException {
+        TrainingType type = getTrainingTypeById(typeId);
+        return Optional.ofNullable(type);
     }
 
     /**
@@ -169,6 +183,7 @@ public class TrainingRepository {
         return null;
     }
 
+
     /**
      * Получает пользователя по его идентификатору.
      *
@@ -191,5 +206,6 @@ public class TrainingRepository {
         }
         return null;
     }
+
 }
 

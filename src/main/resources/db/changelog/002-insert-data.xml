@@ -4,7 +4,7 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
 
-    <changeSet id="add-user-user" author="YourName">
+    <changeSet id="add-user-user" author="Arsenii_Ivashchenko">
         <insert tableName="users" schemaName="training_app">
             <column name="username" value="user"/>
             <column name="password" value="user"/>
@@ -12,7 +12,7 @@
         </insert>
     </changeSet>
 
-    <changeSet id="add-user-admin" author="YourName">
+    <changeSet id="add-user-admin" author="Arsenii_Ivashchenko">
         <insert tableName="users" schemaName="training_app">
             <column name="username" value="admin"/>
             <column name="password" value="admin"/>
@@ -20,7 +20,7 @@
         </insert>
     </changeSet>
 
-    <changeSet id="add-training-types" author="YourName">
+    <changeSet id="add-training-types" author="Arsenii_Ivashchenko">
         <insert tableName="training_types" schemaName="training_app">
             <column name="name" value="бег"/>
         </insert>
@@ -31,6 +31,4 @@
             <column name="name" value="волейбол"/>
         </insert>
     </changeSet>
-
-
 </databaseChangeLog>

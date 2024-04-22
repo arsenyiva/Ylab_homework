@@ -20,6 +20,7 @@
     <liquibase.version>4.5.0</liquibase.version>
     <testcontainers.version>1.16.0</testcontainers.version>
     <logback.version>1.2.6</logback.version>
+    <maven.surefire.version>3.2.5</maven.surefire.version>
   </properties>
 
   <dependencies>
@@ -83,8 +84,8 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <source>9</source>
-          <target>9</target>
+          <source>14</source>
+          <target>14</target>
         </configuration>
       </plugin>
       <plugin>
@@ -101,7 +102,23 @@
             <artifactId>postgresql</artifactId>
             <version>${postgresql.version}</version>
           </dependency>
+          <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>${maven.surefire.version}</version>
+          </dependency>
         </dependencies>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${maven.surefire.version}</version>
+        <configuration>
+          <useSystemClassLoader>false</useSystemClassLoader>
+          <includes>
+            <include>**/*Test.java</include>
+          </includes>
+        </configuration>
       </plugin>
     </plugins>
   </build>

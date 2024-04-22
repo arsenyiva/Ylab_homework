@@ -2,6 +2,9 @@ package org.ylab.homework.homework_2.model;
 
 import java.time.LocalDate;
 
+/**
+ * Класс, представляющий тренировку.
+ */
 public class Training {
     private int id;
     private LocalDate date;
@@ -11,7 +14,7 @@ public class Training {
     private String additionalInfo;
     private User user;
 
-    public Training(int id,LocalDate date, TrainingType type, int durationMinutes, int caloriesBurned, String additionalInfo, User user) {
+    public Training(int id, LocalDate date, TrainingType type, int durationMinutes, int caloriesBurned, String additionalInfo, User user) {
         this.id = id;
         this.date = date;
         this.type = type;

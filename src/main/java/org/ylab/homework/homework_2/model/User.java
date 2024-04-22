@@ -2,6 +2,9 @@ package org.ylab.homework.homework_2.model;
 
 import java.util.List;
 
+/**
+ * Класс, представляющий пользователя.
+ */
 public class User {
     private int id;
     private String username;
@@ -9,7 +12,7 @@ public class User {
     private Role role;
     private List<Training> trainings;
 
-    public User(int id,String username, String password, Role role, List<Training> trainings) {
+    public User(int id, String username, String password, Role role, List<Training> trainings) {
         this.id = id;
         this.username = username;
         this.password = password;

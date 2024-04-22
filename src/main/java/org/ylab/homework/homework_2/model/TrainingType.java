@@ -1,5 +1,8 @@
 package org.ylab.homework.homework_2.model;
 
+/**
+ * Класс, представляющий тип тренировки.
+ */
 public class TrainingType {
     private String name;
     private int id;

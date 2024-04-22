@@ -115,30 +115,20 @@ public class InputHandler {
             scanner.nextLine();
 
             switch (choice) {
-                case 1:
-                    addTraining(user);
-                    break;
-                case 2:
-                    viewTrainings(trainingController.getTrainings(user));
-                    break;
-                case 3:
-                    deleteTraining(user);
-                    break;
-                case 4:
-                    editTraining(user);
-                    break;
-                case 5:
-                    viewStatistic(user);
-                    break;
-                case 6:
+                case 1 -> addTraining(user);
+                case 2 -> viewTrainings(trainingController.getTrainings(user));
+                case 3 -> deleteTraining(user);
+                case 4 -> editTraining(user);
+                case 5 -> viewStatistic(user);
+                case 6 -> {
                     loggedIn = false;
                     UserAuditLogger.logLogout(user.getUsername());
-                    break;
-                default:
-                    outputHandler.displayUnknownDataMessage();
+                }
+                default -> outputHandler.displayUnknownDataMessage();
             }
         }
     }
+
 
     /**
      * Метод для выполнения административных действий.
