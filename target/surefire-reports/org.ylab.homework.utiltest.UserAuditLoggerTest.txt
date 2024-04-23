@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: org.ylab.homework.utiltest.UserAuditLoggerTest
--------------------------------------------------------------------------------
-Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.928 s -- in org.ylab.homework.utiltest.UserAuditLoggerTest
