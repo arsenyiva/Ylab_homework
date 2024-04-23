@@ -1,0 +1,9 @@
+org\ylab\homework\repositorytest\TrainingTypeRepositoryTest.class
+org\ylab\homework\repositorytest\UserRepositoryTest.class
+org\ylab\homework\repositorytest\TrainingRepositoryTest.class
+org\ylab\homework\servicetest\TrainingTypeServiceTest.class
+org\ylab\homework\controllertest\TrainingControllerTest.class
+org\ylab\homework\servicetest\TrainingServiceTest.class
+org\ylab\homework\servicetest\UserServiceTest.class
+org\ylab\homework\utiltest\UserAuditLoggerTest.class
+org\ylab\homework\controllertest\UserControllerTest.class

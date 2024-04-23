@@ -1,0 +1,92 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <changeSet id="create-tables-and-foreign-keys" author="Arsenii_Ivashchenko">
+        <sql>
+            CREATE SCHEMA IF NOT EXISTS training_app;
+        </sql>
+
+        <createSequence sequenceName="audit_log_id_seq" schemaName="training_app"/>
+        <createTable tableName="audit_log" schemaName="training_app" remarks="Table for audit log entries">
+            <column name="id" type="BIGINT" remarks="Unique identifier for each log entry">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="message" type="VARCHAR(255)" remarks="Description of the logged event">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP" remarks="Timestamp of when the log entry was created">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <sql>ALTER TABLE training_app.audit_log
+            ALTER COLUMN id SET DEFAULT nextval('training_app.audit_log_id_seq'::regclass);</sql>
+
+        <createSequence sequenceName="users_id_seq" schemaName="training_app" startValue="1" incrementBy="1"/>
+        <createTable tableName="users" schemaName="training_app" remarks="Table for users">
+            <column name="id" type="BIGINT" remarks="Unique identifier for each user">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="username" type="VARCHAR(50)" remarks="Username of the user">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="VARCHAR(255)" remarks="Password of the user">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role" type="VARCHAR(50)" remarks="Role of the user">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <sql>ALTER TABLE training_app.users
+            ALTER COLUMN id SET DEFAULT nextval('training_app.users_id_seq'::regclass);</sql>
+
+        <createSequence sequenceName="trainings_id_seq" schemaName="training_app" startValue="1" incrementBy="1"/>
+        <createTable tableName="trainings" schemaName="training_app" remarks="Table for training data">
+            <column name="id" type="BIGINT" remarks="Unique identifier for each training entry">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT" remarks="ID of the user associated with the training">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date" type="DATE" remarks="Date of the training session">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type_id" type="BIGINT" remarks="ID of the training type">
+                <constraints nullable="false"/>
+            </column>
+            <column name="duration_minutes" type="INT" remarks="Duration of the training session in minutes">
+                <constraints nullable="false"/>
+            </column>
+            <column name="calories_burned" type="INT" remarks="Calories burned during the training session">
+                <constraints nullable="false"/>
+            </column>
+            <column name="additional_info" type="VARCHAR(255)" remarks="Additional information about the training">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <sql>ALTER TABLE training_app.trainings
+            ALTER COLUMN id SET DEFAULT nextval('training_app.trainings_id_seq'::regclass);</sql>
+
+        <createSequence sequenceName="trainings_types_id_seq" schemaName="training_app" startValue="1" incrementBy="1"/>
+        <createTable tableName="training_types" schemaName="training_app" remarks="Table for training types">
+            <column name="id" type="BIGINT" remarks="Unique identifier for each training type">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(50)" remarks="Name of the training type">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <sql>ALTER TABLE training_app.training_types
+            ALTER COLUMN id SET DEFAULT nextval('training_app.trainings_types_id_seq'::regclass);</sql>
+
+        <addForeignKeyConstraint baseTableName="trainings" baseColumnNames="user_id"
+                                 constraintName="fk_user_id" referencedTableName="users"
+                                 referencedColumnNames="id" onDelete="CASCADE"
+                                 baseTableSchemaName="training_app" referencedTableSchemaName="training_app"/>
+        <addForeignKeyConstraint baseTableName="trainings" baseColumnNames="type_id"
+                                 constraintName="fk_type_id" referencedTableName="training_types"
+                                 referencedColumnNames="id" onDelete="CASCADE"
+                                 baseTableSchemaName="training_app" referencedTableSchemaName="training_app"/>
+    </changeSet>
+</databaseChangeLog>
